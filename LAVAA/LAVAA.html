@@ -26,6 +26,12 @@
 
    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
 
+    <!--link to google fonts, Roboto-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+
+
 
 <style>
 input {
@@ -98,7 +104,7 @@ a#downloadJpeg{
 
 
 text.annotation-label {
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-size: 0.4em;
       letter-spacing: 0.2px;
 
@@ -107,7 +113,7 @@ text.annotation-label {
     }
 
 .info{
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       letter-spacing: 0.2px;
       font-weight: lighter;
       font-size: 0.7em;
@@ -117,7 +123,7 @@ text.annotation-label {
 
 text.label{
       visibility: hidden;
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       letter-spacing: 0.2px;
       font-weight: lighter;
       font-size: 0.7em;
@@ -142,9 +148,10 @@ text.label{
       color: #fff;
       border-radius: 4px;
       font-size: 1em;
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-style: italic;
       font-weight: 400;
+      z-index: 99;
 }
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
@@ -167,7 +174,7 @@ text.label{
 
 /*----------------button styles---------------*/
 #button_styled { 
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-size: 0.8em;
       margin-right: 1vw;
       padding: 10px 25px;
@@ -176,7 +183,7 @@ text.label{
       cursor: pointer;
     }
 #button_styled-2 { 
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-size: 0.8em;
       margin-right: 1vw;
       padding: 10px 25px;
@@ -188,12 +195,12 @@ text.label{
 #button_legend { 
       display: block;/*center the text*/
       background: transparent;
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-size: 0.8em;
       border-style: none;
       cursor: pointer;
-      margin-left: auto;
-      margin-right: auto;
+      /*margin-left: auto;
+      margin-right: auto;*/
       padding-top: 2vh;
       padding-bottom: 2vh;
     }
@@ -201,7 +208,7 @@ text.label{
 .button_collapse {
       display: none;
       background: transparent;
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-size: 0.8em;
       border-style: none;
       cursor: pointer;
@@ -210,7 +217,7 @@ text.label{
     }
 /*unique back button to toggle zoom view and general view*/
 #button_back {
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-size: 0.8em;
       border-radius: 5px;
       display: none;
@@ -222,7 +229,7 @@ text.label{
       cursor: pointer;
     }
 a#button_styled_download { 
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-size: 1em;
       margin-right: 1vw;
       padding: 10px 25px;
@@ -275,12 +282,21 @@ a#button_styled_download {
       z-index: 99;
 }
 
+#divider-vertical {
+  border-left: 1px solid black;
+  height: 38vw;
+  position: absolute;
+  right: 0%;
+  margin-top: 5vh;
+  margin-left: 50px;
+  top: 0
+}
 
 /*----------brush column styling-----------------*/
 #info-column-wrapper{
 max-width: 50vw;
 height: 40vw;
-border-bottom: 0.5px solid black;
+/*border-bottom: 0.5px solid black;*/
 }
 
     #info-column {
@@ -514,7 +530,7 @@ body {
       background: white;
       z-index: 90;
       height: 40vw;
-      /*border: 0px solid black;*/
+      border: 0px solid black;
       /*box-shadow: inset 0px 0px 0px 0.5px black;*/
       box-sizing: border-box;
       width: 5vw;
@@ -524,7 +540,8 @@ body {
 
     #gLegContainer{
       padding-left: 1.5vw;
-      height: 40vw;
+      height: 38vw;
+      overflow: visible;
     }
       /*.labels-block-outer{
       background: white;
@@ -563,31 +580,31 @@ body {
 
 /*----------general html tag stylings----------*/
 h1{
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 3em;
 }
 .h2 {
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: bold;
   font-size: 1.2em;
   color:  #606060;
 }
 h3{
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 1.5em;
 }
 h4{
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 1em;
   margin-bottom: -0.3em;
 }
 .h5 {
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: lighter;
   font-size: 0.8em;
 }
 p{
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
   line-height: 1.5em;
   font-size: 0.9em;
   padding-bottom: 1vh;
@@ -659,8 +676,9 @@ p{
   </div>
 
    <div id="labels-block">
+    <div id="divider-vertical"></div>
     <div id="labels-block-2">
-       <button id="button_legend">Legend &#x1F862;</button>
+       <button id="button_legend">Show legend &#x1F862;</button>
        <button class="button_collapse" id="buttonCollapse">&#x1F860; Collapse</button>
     </div>
   </div>
@@ -690,13 +708,13 @@ p{
         </div>
         <button id="button_back">Go back</button>
         <div id="ZoomHull">
-              <label class="h5">Show convex hull
+              <label class="h5">Convex hulls
                     <input type="checkbox" id="hullCheckboxZoom">
                     <span class="checkmark-custom"></span>
               </label>
         </div>
         <div id="hullCheckboxDiv">
-              <label class="h5">Show convex hull
+              <label class="h5">Convex hulls
                     <input type="checkbox" id="hullCheckbox">
                     <span class="checkmark-custom" id="hullCheckMark"></span>
               </label>
@@ -870,6 +888,22 @@ p{
           var showL = document.getElementById('labels-block');
           showL.style.opacity = '1';
         }
+
+        function resetDiv(){
+              var collapsed = document.getElementById('labels-block')
+              collapsed.style.marginRight = '0vw';
+              collapsed.style.width = '5vw';
+              var showBtn = document.getElementById('button_legend');
+              showBtn.style.display = 'block';
+              var hideCollapseBtn = document.getElementById('buttonCollapse');
+              hideCollapseBtn.style.display = 'none';
+              // Get a NodeList of all elements
+              const legendTexts = document.querySelectorAll('.label');
+              // Change the visibility attr of multiple elements with a loop
+              legendTexts.forEach(element => {
+                element.style.visibility = 'hidden';
+              });
+          }
 
 
 /////////////////////--csv download--///////////////////////////
@@ -1071,6 +1105,8 @@ p{
               });
             }
           } //end of expand-collapse
+
+
           function goBack() {
             overView();
             showBtnBlock();
@@ -1124,7 +1160,7 @@ p{
               return d.pval;
             })
             //create two Yscales with different ranges
-          yScale.domain([min, max]) //added paddings
+          yScale.domain([min, max])
             .range([0, height]).nice();
           yScale2.domain([0.0000001, max + 5]) //padding to the bottom
             .range([200, 250]);
@@ -1150,8 +1186,8 @@ p{
           });
           //create x-scale
           var xScale = d3.scaleLinear().domain([betaMin - betaMax, betaMax + (betaMin * (-1))]) //make x-scale symmetrical
-            .range([0, width]).nice();
-          var xScale2 = d3.scaleLinear().domain([betaMin2, betaMax2]).range([0, width]).nice();
+            .range([0, width]);
+          var xScale2 = d3.scaleLinear().domain([betaMin2-0.1, betaMax2+0.1]).range([0, width]);
           //initializing square root scale for scaling datapoint size
           const sqrtScale = d3.scaleSqrt().domain([0, max]).range([2, 2.02]); //only allow a slight change in values since variation is huge
           var fileInput = document.getElementById('data-file');
@@ -1339,7 +1375,7 @@ p{
           gLeg.append('text').attr('class', 'label').attr('x', xOffset + legendItemSize + 5).attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 5).text(d => d.category)
             ////////////////////////////////////////////////////////////////////
             //attaching click to the legend text for now
-          gLeg.on("click.legend", function(d) {
+          gLeg.on("mouseover.legend", function(d) {
               d3.selectAll('.newCircleCenter').remove();
               var legendText = this.textContent; //get the text of the legend in a variable
               var HighlightData = data.filter(d => d.category == legendText) //get the data objects associated with the legend
@@ -1392,7 +1428,7 @@ p{
             }) //end of click
             //double-click anywhere on the labels block
           var labelsBlock = d3.select('#labels-block')
-          labelsBlock.on('dblclick.legend', function(d) {
+          labelsBlock.on('mouseout.legend', function(d) {
               //reset circlecenter opacity
               d3.selectAll('.circleCenter').style('opacity', function(d) {
                   if(d.pval >= 0.0000001) {
@@ -1554,7 +1590,7 @@ p{
             });
             var xScale3 = d3.scaleLinear()
               //.domain([betaMin3-(betaMax3),betaMax3+(betaMin3*(-1))])
-              .domain([betaMin3, betaMax3]).range([0, width]).nice();
+              .domain([betaMin3-0.1, betaMax3+0.1]).range([0, width]);
             var hullPoints = []; //create empty array where to store datapoints
             const groups = d3.groups(selection2, function(d) {
                 return d.category; //grouping done by categories, returns an array
@@ -1649,6 +1685,8 @@ p{
 ////////////////////////////////////////////////////////
 
           function overView() {
+
+            resetDiv();
             clearSelections();
             hideBtn();
             hideZoomClear();
@@ -1855,7 +1893,7 @@ p{
             gLeg.append('text').attr('class', 'label').attr('x', xOffset + legendItemSize + 5).attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 5).text(d => d.category)
 
 
-            gLeg.on("click.legend", function(d) {
+            gLeg.on("mouseover.legend", function(d) {
                 d3.selectAll('.newCircleCenter').remove();
                 var legendText = this.textContent; //get the text of the legend in a variable
                 var HighlightData = data.filter(d => d.category == legendText) //get the data objects associated with the legend
@@ -1924,7 +1962,7 @@ p{
               }) //end of click
               //double-click anywhere on the labels block
             var labelsBlock = d3.select('#labels-block')
-            labelsBlock.on('dblclick.legend', function(d) {
+            labelsBlock.on('mouseout.legend', function(d) {
                 //reset circlecenter opacity
                 d3.selectAll('.circleCenter').style('opacity', function(d) {
                     if(d.pval >= 0.0000001) {
@@ -2067,6 +2105,7 @@ p{
           function redrawScale() { //despite the name redraw both the scales and the dots based on brush
             newData = data.filter(d => d.pval <= 0.0000001)
             removeText();
+            resetDiv();
             //interactiveLabels();
             //remove old stuff
             svg.selectAll('.hullPath').remove();
@@ -2097,6 +2136,13 @@ p{
               });
             //style the tick lines
             d3.selectAll('g.tick').select('line').style('stroke-width', 0.1).style('opacity', 0.5);
+          //lightly color the zero side of the x-axis
+          chart.append('rect')
+          .attr("height", height)
+          .attr('width', xScale2(0))
+          .attr("fill", "lightgray")
+          .attr("opacity", 0.2);
+
             //Append new circles
             var g = svg.append('g').selectAll('g').data(newData).enter().append('g')
             g.append('circle').attr("cx", function(d) {
@@ -2186,7 +2232,7 @@ p{
               return `translate(${x}, ${y})`;
             })
             gLeg.append('text').attr('class', 'label').attr('x', xOffset + legendItemSize + 5).attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 5).text(d => d.category)
-            gLeg.on("click.legend", function(d) {
+            gLeg.on("mouseover.legend", function(d) {
                 d3.selectAll('.newCircleCenter').remove();
                 var legendText = this.textContent; //get the text of the legend in a variable
                 var HighlightData = newData.filter(d => d.category == legendText) //get the data objects associated with the legend
@@ -2234,7 +2280,7 @@ p{
               }) //end of click
               //double-click anywhere on the labels block
             var labelsBlock = d3.select('#labels-block')
-            labelsBlock.on('dblclick.legend', function(d) {
+            labelsBlock.on('mouseout.legend', function(d) {
                 //reset circlecenter opacity
                 d3.selectAll('.circleCenter').style('opacity', function(d) {
                     if(d.pval >= 0.0000001) {
@@ -2308,6 +2354,7 @@ p{
 
           function zooming() {
             showZoomClear();
+            resetDiv();//reset the legend block
             //remove old stuff
             svg.selectAll('.hullPath') //remove hull if there is one
               .remove();
@@ -2352,7 +2399,7 @@ p{
             });
             var xScale3 = d3.scaleLinear()
               //.domain([betaMin3-(betaMax3),betaMax3+(betaMin3*(-1))])
-              .domain([betaMin3, betaMax3]).range([0, width]).nice();
+              .domain([betaMin3-0.1, betaMax3+0.1]).range([0, width]);
             //Append the new X Axis
             chart.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(xScale3).ticks(5, '.2f').tickSize(-height))
               //adjust tick labels
@@ -2365,6 +2412,13 @@ p{
               });
             //style the tick lines
             d3.selectAll('g.tick').select('line').style('stroke-width', 0.1).style('opacity', 0.5);
+            //lightly color the zero side of the x-axis
+          chart.append('rect')
+          .attr("height", height)
+          .attr('width', xScale3(0))
+          .attr("fill", "lightgray")
+          .attr("opacity", 0.2);
+
             var g = svg.append('g') //make a new g element to which we append circles
               .selectAll('g').data(selection2).enter().append('g')
             g.append('circle').attr("cx", function(d) {
@@ -2474,7 +2528,7 @@ p{
             gLeg.append('text').attr('class', 'label').attr('x', xOffset + legendItemSize + 5).attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 5).text(d => d.category)
               ////////////////////////////////////////////////////////////////////
               //attaching click to the legend text for now
-            gLeg.on("click.legend", function(d) {
+            gLeg.on("mouseover.legend", function(d) {
                 d3.selectAll('.newCircleCenter').remove();
                 var legendText = this.textContent; //get the text of the legend in a variable
                 var HighlightData = selection2.filter(d => d.category == legendText) //get the data objects associated with the legend
@@ -2503,7 +2557,7 @@ p{
               }) //end of click
               //double-click anywhere on the labels block
             var labelsBlock = d3.select('#labels-block')
-            labelsBlock.on('dblclick.legend', function(d) {
+            labelsBlock.on('mouseout.legend', function(d) {
                 //reset circlecenter opacity
                 d3.selectAll('.circleCenter').style('opacity', function(d) {
                     if(d.pval >= 0.0000001) {
