@@ -625,10 +625,10 @@ p{
   <p>Brush through the datapoints by drawing a rectangle anywhere on the chart. You can reset the brush by clicking anywhere on the chart. To clear out the selection column on the right, press 'clear selection'.</p>
 
   <h4>Filtering with categories</h4>
-  <p>You can highlight datapoints in any category by clicking the legends below the chart. Reset the highlight by double-clicking on the legends or anywhere near them. The legends represent the categories of the datapoints above the significance line.</p>
+  <p>You can highlight datapoints in any category by hovering over the legends next to the chart. The legends represent the categories of the datapoints above the significance line.</p>
 
   <h4>Zooming</h4>
-  <p>Inspect your own selection by drawing a rectangle anywhere on the chart and press enter.</p>
+  <p>Inspect your own selection by drawing a rectangle anywhere on the chart and pressing enter.</p>
 
 
   <h4>Marking the points</h4>
@@ -1184,8 +1184,13 @@ p{
               return d.beta;
             }
           });
+          var biggerBeta = d3.max(data, function(d){
+            if(betaMax > betaMin*(-1)){
+              return betaMax;
+            } else {return betaMin*(-1)}
+          })
           //create x-scale
-          var xScale = d3.scaleLinear().domain([betaMin - betaMax, betaMax + (betaMin * (-1))]) //make x-scale symmetrical
+          var xScale = d3.scaleLinear().domain([biggerBeta*(-1)-0.1, biggerBeta+0.1]) //make x-scale symmetrical
             .range([0, width]);
           var xScale2 = d3.scaleLinear().domain([betaMin2-0.1, betaMax2+0.1]).range([0, width]);
           //initializing square root scale for scaling datapoint size
