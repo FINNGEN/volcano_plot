@@ -26,6 +26,10 @@
 
    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
 
+   <script src="./dataFile1.js"></script>
+   <script src="./dataFile2.js"></script>
+   <script src="./dataFile3.js"></script>
+
     <!--link to google fonts, Roboto-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,19 +38,46 @@
 
 
 <style>
-input {
-  width: 150px;
+/*-----------------------------*/
+/*#section{
+            width: 100%;
+            height: 20vh;
+            background-color: rgb(197, 219, 227);
+            padding: 10vh 0;
+        }*/
+.card{
+  display: inline-block;
+  border: 1px solid #999;
+  border-radius: 3px;
+  outline: none;
+  z-index: 99;
+  -webkit-user-select: none;
+  text-shadow: 1px 1px #fff;
+  background: white;
+  width: 10vw;
+  height: 90%;
+  padding: 2.5%;
+  margin-left: 10%;
 }
+.cardBtn {
+  cursor: pointer;
+}
+
+input {
+  width: 100px;
+}
+/*------------------------------*/
+
 /*help from https://css-tricks.com/snippets/css/custom-file-input-styling-webkitblink/*/
 .custom-file-input::-webkit-file-upload-button {
   visibility: hidden;
 }
 .custom-file-input::before {
-  content: 'Select tsv file';
+  content: 'Select .tsv';
   display: inline-block;
   border: 1px solid #999;
   border-radius: 3px;
-  padding: 8px 25px;
+  padding: 8px 10px;
   margin: 0px;
   outline: none;
   white-space: nowrap;
@@ -60,6 +91,44 @@ input {
 .custom-file-input:active::before {
   background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
 }
+
+
+/*-------------------------*/
+button#downloadSample {
+  /*width: 150px;*/
+  display: inline-block;
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 8px 10px;
+  margin: 0px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  text-shadow: 1px 1px #fff;
+  background: white;
+}
+button#downloadSample:hover {
+  border-color: black;
+}
+button#firstSet {
+  width: 150px;
+  display: inline-block;
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 8px 25px;
+  margin: 0px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  text-shadow: 1px 1px #fff;
+  background: white;
+}
+button#firstSet:hover {
+  border-color: black;
+}
+/*-------------------------*/
 
 button#download {
   width: 150px;
@@ -79,6 +148,7 @@ button#download:hover {
   border-color: black;
 }
 .downloadImgBtn {
+  z-index: 40;
   width: 73px;
   display: inline-block;
   border: 1px solid #999;
@@ -161,7 +231,7 @@ text.label{
       width: 100%;
       line-height: 1;
       color: rgba(0, 0, 0, 0.8);
-      content: "\25BC";/*unicode symbol*/
+      /*content: "\25BC"; unicode symbol*/
       position: absolute;
       text-align: right;
 }
@@ -251,6 +321,27 @@ a#button_styled_download {
       top: 0;
       left: 0;
   }
+
+/*when sample data is clicked*/
+#upload-options{
+  position: fixed;
+  top: 50%;
+  width: 100%;
+  z-index: 99;
+  }
+
+#upload-options-background{
+  background-color: rgba(0,0,0,0.7);
+      /*animation: fade 0.5s linear 1 normal forwards;*/
+      width: 100%;/*make full width*/
+      height: 100vh;/*make full height*/
+      z-index: 95;
+      display: none;/*only show after click event*/
+      position: fixed;
+      top: 0;
+      left: 0;
+}
+
 /*cross icon*/
 [class^="ico-"]{
       font: normal 1em/1 Arial, sans-serif;
@@ -279,7 +370,7 @@ a#button_styled_download {
       float: right;/*float right to the chart*/
       position: relative;
       top: 43vw;/*position right below the chart*/
-      z-index: 99;
+      z-index: 90;
 }
 
 #divider-vertical {
@@ -359,9 +450,11 @@ height: 40vw;
   /*top: 0;*/
   /*left: 110px;*/
   margin-left: 0.5vw;
+  margin-top: -1%;/*offset the box*/
   height: 30px;
   width: 30px;
-  background-color: #eee;
+  border: 0.5px solid;
+  background-color: white;
 }
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark-custom:after {
@@ -389,9 +482,11 @@ height: 40vw;
 .checkmark-custom-2 {
   position: absolute;
   margin-left: 0.5vw;
+  margin-top: -1%;/*offset the box*/
   height: 30px;
   width: 30px;
-  background-color: #eee;
+  border: 0.5px solid;
+  background-color: white;
 }
 .checkmark-custom-2:after {
   content: "";
@@ -416,9 +511,11 @@ height: 40vw;
 .checkmark-custom-3 {
   position: absolute;
   margin-left: 0.5vw;
+  margin-top: -1%;/*offset the box*/
   height: 30px;
   width: 30px;
-  background-color: #eee;
+  border: 0.5px solid;
+  background-color: white;
 }
 .checkmark-custom-3:after {
   content: "";
@@ -492,6 +589,12 @@ body {
     #input-btn-block {
       padding-left: 0vw;
     }
+
+/*-------------------------*/
+    #input-btn-block-sample {
+      padding-left: 0vw;
+    }
+/*--------------------------*/
 
    #btn-block {
       width: 45vw;
@@ -578,6 +681,39 @@ body {
       display: none;
 }
 
+input[type=number] {
+    width: 100px;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border: 0.5px solid black;
+  }
+
+  #customCase-block {
+    display: none;
+  }
+
+  #inputSet {
+    font-family: 'Roboto', sans-serif;
+    background: white;
+      font-size: 0.8em;
+      margin-left: 0px;
+      padding: 5px 10px;
+      border: 0.5px solid black;
+      border-radius: 0px;
+      cursor: pointer;
+  }
+
+  #inputReset{
+    font-family: 'Roboto', sans-serif;
+    background: white;
+      font-size: 0.8em;
+      margin-left: 0px;
+      padding: 5px 10px;
+      border: 0.5px solid black;
+      border-radius: 0px;
+      cursor: pointer;
+  }
+
 /*----------general html tag stylings----------*/
 h1{
   font-family: 'Roboto', sans-serif;
@@ -636,9 +772,9 @@ p{
 </div>
 </div>
 
+
+
 <hr size="1" width="100%" color="black"> 
-
-
 
 <!-----buttons regarding the information table---->
 <div style="position: relative;">
@@ -691,7 +827,6 @@ p{
 </div>
 
 <!--relative position to the parent div to enable legends block on the side of the chart to sit with absolute positioning (positioned absolute to be able to sit on top of the information table)-->
-<div>
 
   <div id="chart">
 
@@ -704,6 +839,7 @@ p{
         <div id="hideThese">
           <div id="input-btn-block">
           <input id="data-file" type="file" class="custom-file-input"/>
+           <button id="downloadSample" onClick="showSampleSets()">Use sample data</button>
           </div>
         </div>
         <button id="button_back">Go back</button>
@@ -713,25 +849,26 @@ p{
                     <span class="checkmark-custom"></span>
               </label>
         </div>
-        <div id="hullCheckboxDiv">
-              <label class="h5">Convex hulls
+        <div id="hullCheckboxDiv" style="margin-top:1%">
+              <label class="h5" style="padding-left: 1vw";>Convex hulls
                     <input type="checkbox" id="hullCheckbox">
                     <span class="checkmark-custom" id="hullCheckMark"></span>
               </label>
         </div>
-        <div id="significanceCheckboxDiv">
-              <label class="h5" style="padding-left: 4vw;">Show significant
+        <div id="significanceCheckboxDiv" style="margin-top:1%">
+              <label class="h5" style="padding-left: 3vw;">Significant
                     <input type="checkbox" id="significanceCheckbox" >
                     <span class="checkmark-custom-2"></span>
               </label>
         </div>
-        <div id="pipCheckboxDiv">
-              <label class="h5" style="padding-left: 4vw;">Show PIP: > 0
+        <div id="pipCheckboxDiv" style="margin-top:1%">
+              <label class="h5" style="padding-left: 3vw;">PIP: > 0
                     <input type="checkbox" id="pipCheckbox" >
                     <span class="checkmark-custom-3"></span>
               </label>
               <!--<label class="h5" style="padding-left: 3vw;">Zoom to selection by pressing enter.</label>-->
         </div>
+
 
 </div><!--end of checkbox flex--> 
 </div><!--end of chart btn block-->
@@ -742,8 +879,14 @@ p{
 <button id="download" onClick="downloadImg();myToggle()">download image</button>
 </div>
 
+
 <div id="chartInner">
-  
+<div id="customCase-block" style="padding-left: 7vw;">
+    <label class="h5" for="customCase">Set a custom maximum for scaling case numbers:</label>
+    <input type="number" id="customCase" name="customCase">
+    <button id="inputSet" onclick="customCaseNumber();">Set</button>
+    <button id="inputReset" onclick="customCaseNumberReset();">Reset</button>
+</div>
 </div>
 
 
@@ -764,6 +907,9 @@ p{
   </div>
   </div>
 
+  <div id="upload-options-background">
+    <div id="upload-options"></div><!---container for sample data cards----->
+  </div>
 
   <script>
 
@@ -854,6 +1000,8 @@ p{
         function showImgDownload() {
           var show = document.getElementById('downloadImg-block');
           show.style.display = 'block';
+          var showCaseBlock = document.getElementById('customCase-block');
+          showCaseBlock.style.display = 'block';
         }
         //hide download option buttons
         function hideDownloadOptions() {
@@ -904,6 +1052,7 @@ p{
                 element.style.visibility = 'hidden';
               });
           }
+
 
 
 /////////////////////--csv download--///////////////////////////
@@ -1017,18 +1166,101 @@ p{
           img.src = url;
         }
 
+  function showSampleSets() {
+  var show = document.getElementById('upload-options-background')
+  show.style.display = 'block';
+
+  const samples = [
+        {
+            title:"GCKR",
+            description:"UKB Nightingale data",
+            data:data1,//taken from the scripts imported above (in head)
+        },
+        {
+            title:"rs1260326",
+            description:"description",
+            data:data2,
+        },
+        {
+            title:"3_188407204_AC_A",
+            description:"description",
+            data:data3,
+        },
+    ];
+
+console.log(data2);
+ const sampleblock = d3.select("body")
+        .append("div")
+        .attr("id","upload-options")
+    const cards = sampleblock.selectAll(".cards")
+        .data(samples)
+        .join("div")
+        .classed("card",true)
+    cards.append("p")
+        .html(d=>d.title)
+    cards.append("p")
+        .html(d=>d.description);
+    cards.append("button")
+        .classed("cardBtn", true)
+        .html("select")
+        .on("click",(e,d)=>{
+            const sample = d.data;
+            //run your function here
+            //  |    |    |    |
+            //  V    V    V    V
+            volcano(sample)
+        });
+
+}
+
+/*Remove both the sample set cards and the background d*/
+function hideSampleSets() {
+var sampleblock = document.getElementById('upload-options')
+  sampleblock.remove();
+var background = document.getElementById('upload-options-background')
+  background.style.display = 'none';
+}
+
+/////////////////////////////////////
+function customCaseNumber(){
+          var customValue = document.getElementById('customCase').value;
+          console.log(customValue);
+          const sqrtScale2 = d3.scaleSqrt()
+              .domain([0, customValue])
+              .range([2, 3]);
+
+          d3.selectAll('#halo')
+          .transition()
+          .attr('r', d => sqrtScale2(d.n_case));
+        }
+
+function customCaseNumberReset(){
+  const sqrtScale = d3.scaleSqrt()
+              .domain([0, 1000])
+              .range([2, 3]);
+  d3.selectAll('#halo')
+  .transition()
+  .attr('r', d => sqrtScale(d.n_case))
+
+  document.getElementById('customCase').value = '';
+}
+
+
 
 /////////////////////////////////////////////////////
 //////----the main function starts here---///////////
 /////////////////////////////////////////////////////
 
         function volcano(data) {
+          hideSampleSets();
           showImgDownload();
           hideDownloadOptions();
+          hideSampleSets();
           showLegends();
           d3.select('.h2').remove();
           d3.select('#gLegContainer').remove();
           d3.select('#gLegContainer2').remove();
+
           document.getElementById('button_legend').onclick = function() {
             return expandDiv();
           };
@@ -1189,28 +1421,41 @@ p{
               return betaMax;
             } else {return betaMin*(-1)}
           })
+
+          //getting max case values
+          var CaseMax = d3.max(data, function(d) {
+            return d.n_case;
+          });
+
           //create x-scale
           var xScale = d3.scaleLinear().domain([biggerBeta*(-1)-0.1, biggerBeta+0.1]) //make x-scale symmetrical
             .range([0, width]);
           var xScale2 = d3.scaleLinear().domain([betaMin2-0.1, betaMax2+0.1]).range([0, width]);
           //initializing square root scale for scaling datapoint size
-          const sqrtScale = d3.scaleSqrt().domain([0, max]).range([2, 2.02]); //only allow a slight change in values since variation is huge
-          var fileInput = document.getElementById('data-file');
+          const sqrtScale = d3.scaleSqrt()
+          .domain([0, CaseMax])
+          .range([2, 20]);
+
+
+          /*var fileInput = document.getElementById('data-file');
           var filename = fileInput.files[0].name;
           var headline = d3.select('#headline-block')
           var newStr = filename.replace(/_/g, ":");
           headline.append('text').attr("x", 0).attr("y", 0).attr('class', 'h2').text(function(d) {
             return newStr.split('.')[0] //get the filename without the extension
               .slice(0, -23)
-          });
+          });*/
+
           //enable the enter-zoom in first state
           //trigger a function with enter. https://stackoverflow.com/questions/40252637/keypress-trigger-a-function-if-specific-pressed
           function checkKey(e) {
             var key = e.which || e.keyCode;
-            if(key === 13) zooming();
+            if(key === 13) {
+            zooming();
             showBtn();
             hideBtns();
             removeText(); //on enter zoom, remove old selection text and switch button view
+              }
           }
           document.addEventListener("keypress", checkKey);
           //Append the X Axis
@@ -1271,13 +1516,23 @@ p{
 ///////////////////--bigger background dots--//////////////////////
 
           var g = svg.append('g') //make a new g element to which we append circles
-            .attr("id", "dataPoints").selectAll('g').data(data).enter().append('g')
-          g.append('circle').attr("cx", function(d) {
+            .attr("id", "dataPoints")
+            .selectAll('g').data(data).enter().append('g')
+          g.append('circle')
+          .attr('id', 'halo')
+          .attr("cx", function(d) {
               return xScale(d.beta) + 40;
             }) //+margin-left amount
             .attr("cy", function(d) {
               return yScale(d.pval)
-            }).attr('r', d => sqrtScale(d.n_case)).style('pointer-events', 'none') //disable hover effects
+            })
+            .attr('r', d => sqrtScale(d.n_case))
+            /*.attr('r', function(d){
+              if(d.n_case < 1000){
+                return sqrtScale(d.n_case);
+              } else { return 10;}
+            })*/
+            .style('pointer-events', 'none') //disable hover effects
             .style('opacity', function(d) {
               if(d.pval >= 0.0000001) {
                 return 'opacity', 0.1
@@ -1704,11 +1959,13 @@ p{
             //trigger a function with enter. https://stackoverflow.com/questions/40252637/keypress-trigger-a-function-if-specific-pressed
             function checkKey(e) {
               var key = e.which || e.keyCode;
-              if(key === 13) zooming();
+              if(key === 13) {
+              zooming();
               showBtn();
               hideBtns();
-              removeText(); //on enter zoom, remove old selection text and switch button view
-            }
+              removeText();
+              } //on enter zoom, remove old selection text and switch button view
+            } 
             document.addEventListener("keypress", checkKey);
             //remove old stuff
             svg.selectAll('.hullPath').remove();
@@ -1793,7 +2050,9 @@ p{
 
             var g = svg.append('g').attr("id", "dataPoints") //make a new g element to which we append circles
               .selectAll('g').data(data).enter().append('g')
-            g.append('circle').attr("cx", function(d) {
+            g.append('circle')
+            .attr('id', 'halo')
+            .attr("cx", function(d) {
                 return xScale(d.beta) + 40;
               }) //added offset to align beta values
               .attr("cy", function(d) {
@@ -2191,7 +2450,8 @@ p{
                 labelLayer.selectAll("*").remove();
               });
             //bigger circles
-            g.append('circle').attr("id", "dataPoints").attr("cx", function(d) {
+            g.append('circle')
+            .attr("id", "halo").attr("cx", function(d) {
                 return xScale2(d.beta) + 40;
               }) //added offset to align beta values
               .attr("cy", function(d) {
@@ -2484,7 +2744,9 @@ p{
                 labelLayer.selectAll("*").remove();
               });
             //bigger background dots
-            g.append('circle').attr("id", "dataPoints").attr("cx", function(d) {
+            g.append('circle')
+            .attr('id', 'halo')
+            .attr("cx", function(d) {
                 return xScale3(d.beta) + 40;
               }) //added offset to align beta values
               .attr("cy", function(d) {
