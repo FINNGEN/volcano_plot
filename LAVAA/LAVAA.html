@@ -248,7 +248,8 @@ text.label{
       font-size: 0.8em;
       margin-right: 1vw;
       padding: 10px 25px;
-      border-style: none;
+      border: 1px solid black;
+      background-color: white;
       border-radius: 5px;
       cursor: pointer;
     }
@@ -325,10 +326,21 @@ a#button_styled_download {
 /*when sample data is clicked*/
 #upload-options{
   position: fixed;
+  /*display: block;*/
+  opacity: 1;
   top: 50%;
   width: 100%;
   z-index: 99;
   }
+
+.cardBtn {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8em;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
 #upload-options-background{
   background-color: rgba(0,0,0,0.7);
@@ -597,9 +609,9 @@ body {
 /*--------------------------*/
 
    #btn-block {
-      width: 45vw;
+      max-width: 40vw;
       float: right;
-      padding-top: 5vh;
+      padding-top: 6vh;
     }
 
       #btn-block-2 {
@@ -618,7 +630,7 @@ body {
     }
 
     #chart-btn-block {
-      padding-left: 7vw;
+      padding-left: 6vw;
       padding-top: 3vh;
       margin-bottom: -3vh;
       max-height: 100px;
@@ -667,6 +679,7 @@ body {
       display: flex;
       flex-direction: row;
       max-width: 50vw;
+      min-width: 500px;
     }
 
     .chart-btn-container {
@@ -788,7 +801,7 @@ p{
   <!-----hide this duplicate block initially---->
 <div id="btn-block-2">    
     <!--clear selection duplicate button, don't clear out selection 2-->
-        <button id="button_styled-2" onClick="removeText();removeBrush2();removeBrush3();">Clear selection</button>
+        <button id="button_styled" onClick="removeText();removeBrush2();removeBrush3();">Clear selection</button>
         <a id="button_styled_download_zoom" download><button id="button_styled" onClick="downloadCsvZoom();">Download table</button></a>
  </div>
  
@@ -814,8 +827,8 @@ p{
    <div id="labels-block">
     <div id="divider-vertical"></div>
     <div id="labels-block-2">
-       <button id="button_legend">Show legend &#x1F862;</button>
-       <button class="button_collapse" id="buttonCollapse">&#x1F860; Collapse</button>
+       <button id="button_legend">Show legend &#62;</button>
+       <button class="button_collapse" id="buttonCollapse">&#60; Collapse</button>
     </div>
   </div>
 
@@ -908,13 +921,16 @@ p{
   </div>
 
   <div id="upload-options-background">
+    <button class="close" id="closeBtn" onClick="hideSampleSetsDouble()">
+      <i class="ico-times" role="img" aria-label="Cancel"></i>
+    </button>
     <div id="upload-options"></div><!---container for sample data cards----->
   </div>
 
   <script>
 
 
-/////////////////////--csv download--///////////////////////////
+//////////////////-----tsv upload-----////////////////////////////
 
         const fileUpload = document.getElementById("data-file")
         fileUpload.onchange = () => {
@@ -1001,7 +1017,7 @@ p{
           var show = document.getElementById('downloadImg-block');
           show.style.display = 'block';
           var showCaseBlock = document.getElementById('customCase-block');
-          showCaseBlock.style.display = 'block';
+          showCaseBlock.style.display = 'none';
         }
         //hide download option buttons
         function hideDownloadOptions() {
@@ -1167,28 +1183,28 @@ p{
         }
 
   function showSampleSets() {
-  var show = document.getElementById('upload-options-background')
-  show.style.display = 'block';
 
   const samples = [
         {
             title:"GCKR",
-            description:"UKB Nightingale data",
+            description:"GCKR, rs1260326, UKBB Nightingale via OpenGWAS",
             data:data1,//taken from the scripts imported above (in head)
         },
         {
             title:"rs1260326",
-            description:"description",
+            description:"GCKR, rs1260326, FinnGen R7",
             data:data2,
         },
         {
-            title:"3_188407204_AC_A",
-            description:"description",
+            title:"6_90267049_G_A",
+            description:"BACH2, rs72928038, FinnGen R7",
             data:data3,
         },
     ];
 
-console.log(data2);
+
+
+//console.log(data2);
  const sampleblock = d3.select("body")
         .append("div")
         .attr("id","upload-options")
@@ -1211,14 +1227,27 @@ console.log(data2);
             volcano(sample)
         });
 
+  var showBackground = document.getElementById('upload-options-background')
+  showBackground.style.display = 'block';
+  /*var showCards = document.getElementById('upload-options')
+  showCards.style.opacity = 'block';*/
+
 }
 
 /*Remove both the sample set cards and the background d*/
 function hideSampleSets() {
-var sampleblock = document.getElementById('upload-options')
-  sampleblock.remove();
-var background = document.getElementById('upload-options-background')
+  const hideCards = document.getElementsByClassName('card')
+  /*solution to get rid of classed dom elements without removing them from https://stackoverflow.com/questions/4777077/removing-elements-by-class-name*/
+  while(hideCards.length > 0){
+        hideCards[0].parentNode.removeChild(hideCards[0]);
+    }
+  var background = document.getElementById('upload-options-background')
   background.style.display = 'none';
+}
+
+function hideSampleSetsDouble(){
+  hideSampleSets();
+  hideSampleSets();
 }
 
 /////////////////////////////////////
@@ -1230,7 +1259,7 @@ function customCaseNumber(){
               .range([2, 3]);
 
           d3.selectAll('#halo')
-          .transition()
+          //.transition()
           .attr('r', d => sqrtScale2(d.n_case));
         }
 
@@ -1253,13 +1282,14 @@ function customCaseNumberReset(){
 
         function volcano(data) {
           hideSampleSets();
+          hideSampleSets();
           showImgDownload();
           hideDownloadOptions();
-          hideSampleSets();
           showLegends();
           d3.select('.h2').remove();
           d3.select('#gLegContainer').remove();
           d3.select('#gLegContainer2').remove();
+          d3.select("#chart").select("svg").remove();
 
           document.getElementById('button_legend').onclick = function() {
             return expandDiv();
