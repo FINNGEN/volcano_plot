@@ -39,7 +39,7 @@ setReady(true)
                   "phenocode": values[0],
                   "phenostring": values[1],
                   "category": values[2],
-                  "pval": parseFloat(values[3].replace(",",".")),
+                  "mlogp": parseFloat(values[3].replace(",",".")),
                   "beta": parseFloat(values[4].replace(",",".")),
                   "maf": parseFloat(values[5]),
                   "maf_case": parseFloat(values[6]),
@@ -48,7 +48,7 @@ setReady(true)
                   "n_control": parseFloat(values[9]),
                   "pip": parseFloat(values[10]?.replace(",",".")|| 0),
                 }
-              }).filter(e => e.pval < 1);
+              }).filter(e => e.mlogp < 1);
               d3.select("#chart").select("svg").remove();
               volcano(data)
                 //interactiveLabels();
@@ -71,7 +71,7 @@ fileUploadStart.onchange = () => {
           "phenocode": values[0],
           "phenostring": values[1],
           "category": values[2],
-          "pval": parseFloat(values[3].replace(",",".")),
+          "mlogp": parseFloat(values[3].replace(",",".")),
           "beta": parseFloat(values[4].replace(",",".")),
           "maf": parseFloat(values[5]),
           "maf_case": parseFloat(values[6]),
@@ -80,7 +80,7 @@ fileUploadStart.onchange = () => {
           "n_control": parseFloat(values[9]),
           "pip": parseFloat(values[10]?.replace(",",".")|| 0),
         }
-      }).filter(e => e.pval < 1);
+      }).filter(e => e.mlogp < 1);
       d3.select("#chart").select("svg").remove();
       volcano(data)
         //interactiveLabels();
@@ -401,10 +401,10 @@ fileUploadStart.onchange = () => {
           const colorScale2 = d3.scaleOrdinal().range(d3.schemeTableau10);
           //getting max and min y (p-value) values
           var max = d3.max(data, function(d) {
-            return d.pval;
+            return d.mlogp;
           });
           var min = d3.min(data, function(d) {
-              return d.pval;
+              return d.mlogp;
             })
           //max for the case numbers
           var maxCases = d3.max(data, function(d){
@@ -426,12 +426,12 @@ fileUploadStart.onchange = () => {
           });
           //get min and max beta from significant ones
           var betaMax2 = d3.max(data, function(d) {
-            if(d.pval <= 0.0000001) {
+            if(d.mlogp <= 0.0000001) {
               return d.beta;
             }
           });
           var betaMin2 = d3.min(data, function(d) {
-            if(d.pval <= 0.0000001) {
+            if(d.mlogp <= 0.0000001) {
               return d.beta;
             }
           });
@@ -514,7 +514,7 @@ fileUploadStart.onchange = () => {
           .style("stroke-width", 0.5);
           //set up the tooltip
           var tip = d3.tip().attr("class", "d3-tip").offset([-5, 0]).html((event, d) => {
-            return d.category + '<br>' + '<br>' + d.phenostring + '<br>' + '<br>' + "p-value: " + d.pval + "<br>" + "beta value: " + d.beta + '<br>' + "cases / controls: " + d.n_case + ' / ' + d.n_control + '<br>' + 'pip: ' + d.pip
+            return d.category + '<br>' + '<br>' + d.phenostring + '<br>' + '<br>' + "p-value: " + d.mlogp + "<br>" + "beta value: " + d.beta + '<br>' + "cases / controls: " + d.n_case + ' / ' + d.n_control + '<br>' + 'pip: ' + d.pip
           });
           svg.call(tip);
 
@@ -527,12 +527,12 @@ fileUploadStart.onchange = () => {
               return xScale(d.beta) + 40;
             }) //+margin-left amount
             .attr("cy", function(d) {
-              return yScale(d.pval)
+              return yScale(d.mlogp)
             })
             .attr('r', d => sqrtScale(d.n_case))
             .style('pointer-events', 'none') //disable hover effects
             .style('opacity', function(d) {
-              if(d.pval >= 0.0000001) {
+              if(d.mlogp >= 0.0000001) {
                 return 'opacity', 0.1
               } else {
                 return 'opacity', 0.2
@@ -546,10 +546,10 @@ fileUploadStart.onchange = () => {
               return xScale(d.beta) + 40;
             }) //+margin-left amount
             .attr("cy", function(d) {
-              return yScale(d.pval)
+              return yScale(d.mlogp)
             }).attr('fill', d => colorScale(colorValue(d))).attr('class', 'circleCenter')
             .attr('r', 2).attr('stroke', 'white').attr('opacity', function(d) {
-              if(d.pval >= 0.0000001) {
+              if(d.mlogp >= 0.0000001) {
                 return 'opacity', 0.4
               } else {
                 return 'opacity', 1
@@ -569,7 +569,7 @@ fileUploadStart.onchange = () => {
               .attr('r', d => sqrtScale(d.n_case))
             }).on('mouseout.color', function() {
               d3.select(this).transition().duration('200').style('opacity', function(d) {
-                if(d.pval >= 0.0000001) {
+                if(d.mlogp >= 0.0000001) {
                   return 'opacity', 0.4
                 } else {
                   return 'opacity', 1
@@ -612,7 +612,7 @@ fileUploadStart.onchange = () => {
 
 //////////////////////--labels--//////////////////////////////////////
 		 
-          var newData = data.filter(d => d.pval <= 0.0000001);
+          var newData = data.filter(d => d.mlogp <= 0.0000001);
             //categoryData = data.filter(d => d.category == 'Diseases marked as autimmune origin')
             //https://wsvincent.com/javascript-remove-duplicates-array/, this method found from the chat belove the post
           const unique = [];
@@ -646,7 +646,7 @@ fileUploadStart.onchange = () => {
               g.append('circle').attr("cx", function(d) {
                   return xScale(d.beta) + 40;
                 }).attr("cy", function(d) {
-                  return yScale(d.pval)
+                  return yScale(d.mlogp)
                 }).attr('fill', d => colorScale(colorValue(d)))
                 .attr('class', 'newCircleCenter')
                 .attr('r', 2)
@@ -691,7 +691,7 @@ fileUploadStart.onchange = () => {
           labelsBlock.on('mouseout.legend', function(d) {
               //reset circlecenter opacity
               d3.selectAll('.circleCenter').style('opacity', function(d) {
-                  if(d.pval >= 0.0000001) {
+                  if(d.mlogp >= 0.0000001) {
                     return 'opacity', 0.4
                   } else {
                     return 'opacity', 1
@@ -718,14 +718,14 @@ fileUploadStart.onchange = () => {
           const table = d3.select('#info-column');
           const categoryCol = d3.select('#category');
           const phenoCol = d3.select('#phenotype');
-          const pvalCol = d3.select('#pval');
+          const mlogpCol = d3.select('#mlogp');
           const betaCol = d3.select('#beta');
           const caseCol = d3.select('#case-control');
           //brush event inside the first state
           brush.on('end', function(event, d) {
             const selection = event.selection; //the scope of the brush
             d3.selectAll('circle').each(function(d) { //go through the points
-                if(selection && yScale(d.pval) > selection[0][1] && yScale(d.pval) < selection[1][1] && xScale(d.beta) > selection[0][0] && xScale(d.beta) < selection[1][0]) {
+                if(selection && yScale(d.mlogp) > selection[0][1] && yScale(d.mlogp) < selection[1][1] && xScale(d.beta) > selection[0][0] && xScale(d.beta) < selection[1][0]) {
                   selection2.push(d) //push data to the empty array
                 }
               })
@@ -761,10 +761,10 @@ fileUploadStart.onchange = () => {
             }).html(function(d) {
               return d.phenostring;
             })
-            pvalCol.selectAll('p').data((removeDuplicates(selection2))).enter().append('div').attr('class', 'myScroll').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
+            mlogpCol.selectAll('p').data((removeDuplicates(selection2))).enter().append('div').attr('class', 'myScroll').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
               return i * 12;
             }).html(function(d) {
-              return d.pval;
+              return d.mlogp;
             })
             betaCol.selectAll('p').data((removeDuplicates(selection2))).enter().append('div').attr('class', 'myScroll').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
               return i * 12;
@@ -823,7 +823,7 @@ document.getElementById('button_styled_download').onclick = function() {
               return d.category; //grouping done by categories, returns an array
             }).filter(function(G) {
               const groupsize = G[1].filter(function(g) {
-                return g.pval < 0.0000001;
+                return g.mlogp < 0.0000001;
               }).length;
               if(groupsize > 0) {
                 return G;
@@ -832,7 +832,7 @@ document.getElementById('button_styled_download').onclick = function() {
             groups.forEach(e => {
               const group = e[1]
               group.forEach((d, i) => {
-                hullPoints[i] = [xScale(d.beta) + 40, yScale(d.pval)]
+                hullPoints[i] = [xScale(d.beta) + 40, yScale(d.mlogp)]
               })
               const hull = d3.polygonHull(hullPoints)
               const color = colorScale(e[0])
@@ -855,7 +855,7 @@ document.getElementById('button_styled_download').onclick = function() {
               //convex hull code by Nicola
             groups.filter(function(G) {
               const groupsize = G[1].filter(function(g) {
-                return g.pval < 0.0000001;
+                return g.mlogp < 0.0000001;
               }).length;
               if(groupsize > 0) {
                 return G;
@@ -863,8 +863,8 @@ document.getElementById('button_styled_download').onclick = function() {
             }).forEach(e => {
               const group = e[1]
               group.forEach((d, i) => {
-                if(d.pval <= 0.0000001) {
-                  hullPoints[i] = [xScale2(d.beta) + 40, yScale3(d.pval)]
+                if(d.mlogp <= 0.0000001) {
+                  hullPoints[i] = [xScale2(d.beta) + 40, yScale3(d.mlogp)]
                 }
               })
               const hull = d3.polygonHull(hullPoints)
@@ -883,10 +883,10 @@ document.getElementById('button_styled_download').onclick = function() {
           function showHull3() {
             //get min and max p values from selection for zooming
             var pMax2 = d3.max(selection2, function(d) {
-              return d.pval;
+              return d.mlogp;
             });
             var pMin2 = d3.min(selection2, function(d) {
-              return d.pval;
+              return d.mlogp;
             })
             var yScale4 = d3.scaleLog().domain([pMin2 - (pMin2 / 1.001), pMax2 + (pMax2 * 2)]).range([0, height]).nice();
             //get min and max beta from selection for zooming
@@ -906,7 +906,7 @@ document.getElementById('button_styled_download').onclick = function() {
               //convex hull code by Nicola
             groups.filter(function(G) {
               const groupsize = G[1].filter(function(g) {
-                return g.pval < 0.0000001;
+                return g.mlogp < 0.0000001;
               }).length;
               if(groupsize > 0) {
                 return G;
@@ -914,7 +914,7 @@ document.getElementById('button_styled_download').onclick = function() {
             }).forEach(e => {
               const group = e[1]
               group.forEach((d, i) => {
-                hullPoints[i] = [xScale3(d.beta) + 40, yScale4(d.pval)]
+                hullPoints[i] = [xScale3(d.beta) + 40, yScale4(d.mlogp)]
               })
               const hull = d3.polygonHull(hullPoints)
               const color = colorScale(e[0])
@@ -945,7 +945,7 @@ document.getElementById('button_styled_download').onclick = function() {
             svg.selectAll(".dot").data(subset).enter().append("circle").attr('r', 2).attr('class', 'pipdot').attr("cx", function(d) {
               return xScale(d.beta)+40;
             }).attr("cy", function(d) {
-              return yScale(d.pval)
+              return yScale(d.mlogp)
             }).style("fill", d => colorScale(colorValue(d))).style('stroke', 'black').style('stroke-width', 0.7).style('opacity', 1).style('pointer-events', 'none');
           }
 
@@ -953,7 +953,7 @@ document.getElementById('button_styled_download').onclick = function() {
             svg.selectAll(".dot").data(subset2).enter().append("circle").attr('r', 2).attr('class', 'pipdot').attr("cx", function(d) {
               return xScale(d.beta)+40;
             }).attr("cy", function(d) {
-              return yScale(d.pval)
+              return yScale(d.mlogp)
             }).style("fill", d => colorScale(colorValue(d))).style('stroke', 'black').style('stroke-width', 0.5).style('opacity', 1).style('pointer-events', 'none');
           }
           //for significant ones
@@ -961,8 +961,8 @@ document.getElementById('button_styled_download').onclick = function() {
             svg.selectAll(".dot").data(subset).enter().append("circle").attr('r', 2).attr('class', 'pipdot').attr("cx", function(d) {
               return xScale2(d.beta)+40;
             }).attr("cy", function(d) {
-              if(d.pval <= 0.0000001) {
-                return yScale3(d.pval)
+              if(d.mlogp <= 0.0000001) {
+                return yScale3(d.mlogp)
               }
             }).style("fill", d => colorScale(colorValue(d))).style('stroke', 'black').style('stroke-width', 0.7).style('opacity', 1).style('pointer-events', 'none');
           }
@@ -977,8 +977,8 @@ document.getElementById('button_styled_download').onclick = function() {
             .attr("cx", function(d) {
               return xScale2(d.beta)+40;
             }).attr("cy", function(d) {
-              if(d.pval <= 0.0000001) {
-                return yScale3(d.pval)
+              if(d.mlogp <= 0.0000001) {
+                return yScale3(d.mlogp)
               }
             }).style("fill", d => colorScale(colorValue(d))).style('stroke', 'black').style('stroke-width', 0.5).style('opacity', 1).style('pointer-events', 'none');
           }
@@ -1086,7 +1086,7 @@ document.getElementById('button_styled_download').onclick = function() {
             .style('font-family', 'sans-serif')
               //set up the tooltip
             var tip = d3.tip().attr("class", "d3-tip").offset([-5, 0]).html((event, d) => {
-              return d.category + '<br>' + '<br>' + d.phenostring + '<br>' + '<br>' + "p-value: " + d.pval + "<br>" + "beta value: " + d.beta + '<br>' + "cases / controls: " + d.n_case + ' / ' + d.n_control + '<br>' + 'pip: ' + d.pip
+              return d.category + '<br>' + '<br>' + d.phenostring + '<br>' + '<br>' + "p-value: " + d.mlogp + "<br>" + "beta value: " + d.beta + '<br>' + "cases / controls: " + d.n_case + ' / ' + d.n_control + '<br>' + 'pip: ' + d.pip
             });
             svg.call(tip);
 
@@ -1099,12 +1099,12 @@ document.getElementById('button_styled_download').onclick = function() {
                 return xScale(d.beta) + 40;
               }) //added offset to align beta values
               .attr("cy", function(d) {
-                return yScale(d.pval)
+                return yScale(d.mlogp)
               })
               .attr('r', d => sqrtScale(d.n_case))
               .style('pointer-events', 'none') //disable hover effects
               .style('opacity', function(d) {
-                if(d.pval >= 0.0000001) {
+                if(d.mlogp >= 0.0000001) {
                   return 'opacity', 0.1
                 } else {
                   return 'opacity', 0.2
@@ -1117,9 +1117,9 @@ document.getElementById('button_styled_download').onclick = function() {
             g.append('circle').attr("cx", function(d) {
                 return xScale(d.beta) + 40;
               }).attr("cy", function(d) {
-                return yScale(d.pval)
+                return yScale(d.mlogp)
               }).attr('fill', d => colorScale(colorValue(d))).attr('class', 'circleCenter').attr('r', 2).attr('stroke', 'white').attr('opacity', function(d) {
-                if(d.pval >= 0.0000001) {
+                if(d.mlogp >= 0.0000001) {
                   return 'opacity', 0.4
                 } else {
                   return 'opacity', 1
@@ -1138,7 +1138,7 @@ document.getElementById('button_styled_download').onclick = function() {
                 d3.select(this).transition().duration('200').style('opacity', 1).attr('r', d => sqrtScale(d.n_case))
               }).on('mouseout.color', function() {
                 d3.select(this).transition().duration('200').style('opacity', function(d) {
-                  if(d.pval >= 0.0000001) {
+                  if(d.mlogp >= 0.0000001) {
                     return 'opacity', 0.4
                   } else {
                     return 'opacity', 1
@@ -1179,7 +1179,7 @@ document.getElementById('button_styled_download').onclick = function() {
 
 ////////////////////--legends--///////////////////////////////////////
 
-            newData = data.filter(d => d.pval <= 0.0000001)
+            newData = data.filter(d => d.mlogp <= 0.0000001)
               //categoryData = data.filter(d => d.category == 'Diseases marked as autimmune origin')
               //https://wsvincent.com/javascript-remove-duplicates-array/, this method found from the chat belove the post
             const unique = [];
@@ -1213,7 +1213,7 @@ document.getElementById('button_styled_download').onclick = function() {
                 g.append('circle').attr("cx", function(d) {
                     return xScale(d.beta) + 40;
                   }).attr("cy", function(d) {
-                    return yScale(d.pval)
+                    return yScale(d.mlogp)
                   }).attr('fill', d => colorScale(colorValue(d))).attr('class', 'newCircleCenter').attr('r', 2).attr('stroke', 'white').attr('opacity', 1).attr('fill', d => colorScale(colorValue(d)))
                   //tooltip
                   .on('mouseover.tip', tip.show, function() {
@@ -1274,7 +1274,7 @@ document.getElementById('button_styled_download').onclick = function() {
             labelsBlock.on('mouseout.legend', function(d) {
                 //reset circlecenter opacity
                 d3.selectAll('.circleCenter').style('opacity', function(d) {
-                    if(d.pval >= 0.0000001) {
+                    if(d.mlogp >= 0.0000001) {
                       return 'opacity', 0.4
                     } else {
                       return 'opacity', 1
@@ -1301,7 +1301,7 @@ document.getElementById('button_styled_download').onclick = function() {
             const table = d3.select('#info-column');
             const categoryCol = d3.select('#category');
             const phenoCol = d3.select('#phenotype');
-            const pvalCol = d3.select('#pval');
+            const mlogpCol = d3.select('#mlogp');
             const betaCol = d3.select('#beta');
             const caseCol = d3.select('#case-control');
             //brush event inside the overview state
@@ -1309,7 +1309,7 @@ document.getElementById('button_styled_download').onclick = function() {
               const selection = event.selection; //the scope of the brush
               d3.selectAll('circle').each(function(d) { //go through the points
                   //condition: stay within the brush rect
-                  if(selection && yScale(d.pval) > selection[0][1] && yScale(d.pval) < selection[1][1] && xScale(d.beta) > selection[0][0] && xScale(d.beta) < selection[1][0]) {
+                  if(selection && yScale(d.mlogp) > selection[0][1] && yScale(d.mlogp) < selection[1][1] && xScale(d.beta) > selection[0][0] && xScale(d.beta) < selection[1][0]) {
                     selection2.push(d) //push data to the empty array
                   }
                 })
@@ -1332,10 +1332,10 @@ document.getElementById('button_styled_download').onclick = function() {
               }).html(function(d) {
                 return d.phenostring;
               })
-              pvalCol.selectAll('p').data((removeDuplicates(selection2))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
+              mlogpCol.selectAll('p').data((removeDuplicates(selection2))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
                 return i * 12;
               }).html(function(d) {
-                return d.pval;
+                return d.mlogp;
               })
               betaCol.selectAll('p').data((removeDuplicates(selection2))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
                 return i * 12;
@@ -1367,7 +1367,7 @@ document.getElementById('button_styled_download').onclick = function() {
               svg.selectAll(".dot").data(subset).enter().append("circle").attr('r', 2).attr('class', 'pipdot').attr("cx", function(d) {
                 return xScale(d.beta) + 40;
               }).attr("cy", function(d) {
-                return yScale(d.pval)
+                return yScale(d.mlogp)
               }).style("fill", d => colorScale(colorValue(d))).style('stroke', 'black').style('opacity', 1).style('pointer-events', 'none');
             }
 
@@ -1375,7 +1375,7 @@ document.getElementById('button_styled_download').onclick = function() {
               svg.selectAll(".dot").data(subset2).enter().append("circle").attr('r', 2).attr('class', 'pipdot').attr("cx", function(d) {
                 return xScale(d.beta) + 40;
               }).attr("cy", function(d) {
-                return yScale(d.pval)
+                return yScale(d.mlogp)
               }).style("fill", d => colorScale(colorValue(d))).style('stroke', 'black').style('opacity', 1).style('pointer-events', 'none');
             }
             //for significant ones
@@ -1383,8 +1383,8 @@ document.getElementById('button_styled_download').onclick = function() {
               svg.selectAll(".dot").data(subset).enter().append("circle").attr('r', 2).attr('class', 'pipdot').attr("cx", function(d) {
                 return xScale2(d.beta) + 40;
               }).attr("cy", function(d) {
-                if(d.pval <= 0.0000001) {
-                  return yScale3(d.pval)
+                if(d.mlogp <= 0.0000001) {
+                  return yScale3(d.mlogp)
                 }
               }).style("fill", d => colorScale(colorValue(d))).style('stroke', 'black').style('opacity', 1).style('pointer-events', 'none');
             }
@@ -1393,8 +1393,8 @@ document.getElementById('button_styled_download').onclick = function() {
               svg.selectAll(".dot").data(subset2).enter().append("circle").attr('r', 2).attr('class', 'pipdot').attr("cx", function(d) {
                 return xScale2(d.beta) + 40;
               }).attr("cy", function(d) {
-                if(d.pval <= 0.0000001) {
-                  return yScale3(d.pval)
+                if(d.mlogp <= 0.0000001) {
+                  return yScale3(d.mlogp)
                 }
               }).style("fill", d => colorScale(colorValue(d))).style('stroke', 'black').style('opacity', 1).style('pointer-events', 'none');
             }
@@ -1445,8 +1445,8 @@ document.getElementById('button_styled_download').onclick = function() {
 //////////////////--show significant ones function--////////////////////
 /////////////////////////////////////////////////////////////////////////
 
-          function redrawScale() { //despite the name redraw both the scales and the dots based on pval being smaller than 0.0000001
-            newData = data.filter(d => d.pval <= 0.0000001)
+          function redrawScale() { //despite the name redraw both the scales and the dots based on mlogp being smaller than 0.0000001
+            newData = data.filter(d => d.mlogp <= 0.0000001)
             removeText();
             resetDiv();
             //interactiveLabels();
@@ -1491,7 +1491,7 @@ document.getElementById('button_styled_download').onclick = function() {
             g.append('circle').attr("cx", function(d) {
                 return xScale2(d.beta) + 40;
               }).attr("cy", function(d) {
-                return yScale3(d.pval)
+                return yScale3(d.mlogp)
               }).attr('fill', d => colorScale(colorValue(d))).attr('class', 'circleCenter').attr('r', 2).attr('stroke', 'white').attr('opacity', 1).attr('fill', d => colorScale(colorValue(d)))
               //tooltip
               .on('mouseover.tip', tip.show, function() {
@@ -1502,7 +1502,7 @@ document.getElementById('button_styled_download').onclick = function() {
                 d3.select(this).transition().duration('200').style('opacity', 1).attr('r', d => sqrtScale(d.n_case))
               }).on('mouseout.color', function() {
                 d3.select(this).transition().duration('200').style('opacity', function(d) {
-                  if(d.pval >= 0.0000001) {
+                  if(d.mlogp >= 0.0000001) {
                     return 'opacity', 0.4
                   } else {
                     return 'opacity', 1
@@ -1533,7 +1533,7 @@ document.getElementById('button_styled_download').onclick = function() {
                 return xScale2(d.beta) + 40;
               }) //added offset to align beta values
               .attr("cy", function(d) {
-                return yScale3(d.pval)
+                return yScale3(d.mlogp)
               }).attr('r', d => sqrtScale(d.n_case)).style('pointer-events', 'none') //disable hover effects
               .attr('class', 'circleBackground').style('opacity', 0.2).attr('fill', d => colorScale(colorValue(d))) //color by category
               //brushing significant ones, help from https://peterbeshai.com/blog/2016-12-03-brushing-in-scatterplots-with-d3-and-quadtrees/
@@ -1546,7 +1546,7 @@ document.getElementById('button_styled_download').onclick = function() {
             const table = d3.select('#info-column');
             const categoryCol = d3.select('#category');
             const phenoCol = d3.select('#phenotype');
-            const pvalCol = d3.select('#pval');
+            const mlogpCol = d3.select('#mlogp');
             const betaCol = d3.select('#beta');
             const caseCol = d3.select('#case-control');
 
@@ -1586,7 +1586,7 @@ document.getElementById('button_styled_download').onclick = function() {
                 g.append('circle').attr("cx", function(d) {
                     return xScale2(d.beta) + 40;
                   }).attr("cy", function(d) {
-                    return yScale3(d.pval)
+                    return yScale3(d.mlogp)
                   }).attr('fill', d => colorScale(colorValue(d))).attr('class', 'newCircleCenter').attr('r', 2).attr('stroke', 'white').attr('opacity', 1).attr('fill', d => colorScale(colorValue(d)))
                   //tooltip
                   .on('mouseover.tip', tip.show, function() {
@@ -1626,7 +1626,7 @@ document.getElementById('button_styled_download').onclick = function() {
             labelsBlock.on('mouseout.legend', function(d) {
                 //reset circlecenter opacity
                 d3.selectAll('.circleCenter').style('opacity', function(d) {
-                    if(d.pval >= 0.0000001) {
+                    if(d.mlogp >= 0.0000001) {
                       return 'opacity', 0.4
                     } else {
                       return 'opacity', 1
@@ -1645,7 +1645,7 @@ document.getElementById('button_styled_download').onclick = function() {
               const selection = event.selection; //the scope of the brush
               d3.selectAll('circle').each(function(d) { //go through the points
                   //condition: stay within the brush rect
-                  if(selection && yScale3(d.pval) > selection[0][1] && yScale3(d.pval) < selection[1][1] && xScale2(d.beta) > selection[0][0] && xScale2(d.beta) < selection[1][0]) {
+                  if(selection && yScale3(d.mlogp) > selection[0][1] && yScale3(d.mlogp) < selection[1][1] && xScale2(d.beta) > selection[0][0] && xScale2(d.beta) < selection[1][0]) {
                     selection3.push(d) //push data to the empty array
                   }
                 })
@@ -1667,10 +1667,10 @@ document.getElementById('button_styled_download').onclick = function() {
               }).html(function(d) {
                 return d.phenostring;
               })
-              pvalCol.selectAll('p').data((removeDuplicates2(selection3))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
+              mlogpCol.selectAll('p').data((removeDuplicates2(selection3))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
                 return i * 12;
               }).html(function(d) {
-                return d.pval;
+                return d.mlogp;
               })
               betaCol.selectAll('p').data((removeDuplicates2(selection3))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
                 return i * 12;
@@ -1765,10 +1765,10 @@ document.getElementById('button_styled_download').onclick = function() {
             const legendBlockVar3 = svg4.append('g'); //another one for zooming()
             //get min and max p values from selection for zooming
             var pMax2 = d3.max(selection2, function(d) {
-              return d.pval;
+              return d.mlogp;
             });
             var pMin2 = d3.min(selection2, function(d) {
-              return d.pval;
+              return d.mlogp;
             })
             var yScale4 = d3.scaleLog().domain([pMin2 - (pMin2 / 1.001), pMax2 + (pMax2 * 2)]).range([0, height]).nice();
             //get min and max beta from selection for zooming
@@ -1805,9 +1805,9 @@ document.getElementById('button_styled_download').onclick = function() {
             g.append('circle').attr("cx", function(d) {
                 return xScale3(d.beta) + 40;
               }).attr("cy", function(d) {
-                return yScale4(d.pval)
+                return yScale4(d.mlogp)
               }).attr('fill', d => colorScale(colorValue(d))).attr('class', 'circleCenter').attr('r', 2).attr('stroke', 'white').attr('opacity', function(d) {
-                if(d.pval >= 0.0000001) {
+                if(d.mlogp >= 0.0000001) {
                   return 'opacity', 0.4
                 } else {
                   return 'opacity', 1
@@ -1822,7 +1822,7 @@ document.getElementById('button_styled_download').onclick = function() {
                 d3.select(this).transition().duration('200').style('opacity', 1).attr('r', d => sqrtScale(d.n_case))
               }).on('mouseout.color', function() {
                 d3.select(this).transition().duration('200').style('opacity', function(d) {
-                  if(d.pval >= 0.0000001) {
+                  if(d.mlogp >= 0.0000001) {
                     return 'opacity', 0.4
                   } else {
                     return 'opacity', 1
@@ -1864,22 +1864,22 @@ document.getElementById('button_styled_download').onclick = function() {
                 return xScale3(d.beta) + 40;
               }) //added offset to align beta values
               .attr("cy", function(d) {
-                return yScale4(d.pval)
+                return yScale4(d.mlogp)
               }).attr('r', d => sqrtScale(d.n_case))
               .style('pointer-events', 'none') //disable hover effects
               .attr('class', 'circleBackground').style('opacity', function(d) {
-                if(d.pval >= 0.0000001) {
+                if(d.mlogp >= 0.0000001) {
                   return 'opacity', 0.1
                 } else {
                   return 'opacity', 0.2
                 }
               }).attr('fill', d => colorScale(colorValue(d))) //color by category
             g.append('line').attr("x1", 40).attr("y1", function(d) {
-              if(d.pval > 0.0000001) {
+              if(d.mlogp > 0.0000001) {
                 return yScale4(0.0000001)
               }
             }).attr("x2", width + 40).attr("y2", function(d) {
-              if(d.pval > 0.0000001) {
+              if(d.mlogp > 0.0000001) {
                 return yScale4(0.0000001)
               }
             }).style("stroke", 'grey').style("stroke-dasharray", ("3, 3")).style("stroke-width", 0.3);
@@ -1921,7 +1921,7 @@ document.getElementById('button_styled_download').onclick = function() {
                 g.append('circle').attr("cx", function(d) {
                     return xScale3(d.beta) + 40;
                   }).attr("cy", function(d) {
-                    return yScale4(d.pval)
+                    return yScale4(d.mlogp)
                   }).attr('fill', d => colorScale(colorValue(d))).attr('class', 'newCircleCenter').attr('r', 2).attr('stroke', 'white').attr('opacity', 1).attr('fill', d => colorScale(colorValue(d)))
                   //tooltip
                   .on('mouseover.tip', tip.show, function() {
@@ -1942,7 +1942,7 @@ document.getElementById('button_styled_download').onclick = function() {
             labelsBlock.on('mouseout.legend', function(d) {
                 //reset circlecenter opacity
                 d3.selectAll('.circleCenter').style('opacity', function(d) {
-                    if(d.pval >= 0.0000001) {
+                    if(d.mlogp >= 0.0000001) {
                       return 'opacity', 0.4
                     } else {
                       return 'opacity', 1
@@ -1956,14 +1956,14 @@ document.getElementById('button_styled_download').onclick = function() {
               //column setup for the brushed data
             const categoryCol = d3.select('#category');
             const phenoCol = d3.select('#phenotype');
-            const pvalCol = d3.select('#pval');
+            const mlogpCol = d3.select('#mlogp');
             const betaCol = d3.select('#beta');
             const caseCol = d3.select('#case-control');
             //brush event
             brush.on('end', function(event, d) {
               const selection = event.selection; //the scope of the brush
               d3.selectAll('circle').each(function(d) { //go through the points
-                  if(selection && yScale4(d.pval) > selection[0][1] && yScale4(d.pval) < selection[1][1] && xScale3(d.beta) > selection[0][0] && xScale3(d.beta) < selection[1][0]) {
+                  if(selection && yScale4(d.mlogp) > selection[0][1] && yScale4(d.mlogp) < selection[1][1] && xScale3(d.beta) > selection[0][0] && xScale3(d.beta) < selection[1][0]) {
                     selection4.push(d) //push data to the empty array
                   }
                 })
@@ -1987,10 +1987,10 @@ document.getElementById('button_styled_download').onclick = function() {
               }).html(function(d) {
                 return d.phenostring;
               })
-              pvalCol.selectAll('p').data((removeDuplicates3(selection4))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
+              mlogpCol.selectAll('p').data((removeDuplicates3(selection4))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
                 return i * 12;
               }).html(function(d) {
-                return d.pval;
+                return d.mlogp;
               })
               betaCol.selectAll('p').data((removeDuplicates3(selection4))).enter().append('div').attr('data-simplebar', 'init').style('overflow-x', 'auto').append('p').attr('class', 'info').attr('x', 10).attr('y', function(d, i) {
                 return i * 12;
@@ -2215,7 +2215,7 @@ function tableClick() {
     				<div id="phenotype">
         				<h5 className="h5" style={{width: '10vw'}}>Phenotype</h5>
     				</div>
-    				<div id="pval">
+    				<div id="mlogp">
         				<h5 className="h5" style={{maxWidth: '10vw'}}>P-value</h5>
     				</div>
     				<div id="beta">
